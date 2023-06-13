@@ -65,13 +65,13 @@ const tasks = [
 
 /*All Tasks*/
 exports.getTasks = (request, response)  =>{
-	if (!request.session.authorized|| !request.session.sessionMail) return response.sendStatus(401);
+	if (!request.session.authorized|| !request.session.sessionMail) return response.status(401).json('Unauthorized');
 	response.status(200).json(tasks);
 };
 
 
 exports.postTasks = (request, response)  =>{
-	if (!request.session.authorized || !request.session.sessionMail) return response.sendStatus(401);
+	if (!request.session.authorized || !request.session.sessionMail) return response.status(401).json('Unauthorized');
 
 	const newtask = request.body;
 	const newId = tasks[tasks.length - 1].id + 1;
@@ -89,7 +89,7 @@ exports.postTasks = (request, response)  =>{
 /*Individual Tasks*/
 
 exports.getTaskId  = (request, response)  =>{
-	if (!request.session.authorized || !request.session.sessionMail) return response.sendStatus(401);
+	if (!request.session.authorized || !request.session.sessionMail) return response.status(401).json('Unauthorized');
 
 	const id = request.params.id;
 	const task = tasks.find(t => t.id == id);
@@ -100,29 +100,29 @@ exports.getTaskId  = (request, response)  =>{
 };
 
 exports.putTaskId  = (request, response)  =>{
-	if (!request.session.authorized || !request.session.sessionMail) return response.sendStatus(401);
+	if (!request.session.authorized || !request.session.sessionMail) return response.status(401).json('Unauthorized');
 
 	const id = request.params.id;
 	const taskIndex = tasks.findIndex(t => t.id == id);
 	const taskUpdate = request.body;
 
-	if (!taskIndex == 0) return response.sendStatus(404);
-	if (!isValid(taskUpdate)) return response.sendStatus(422);
+	if (!taskIndex == 0) return response.status(404);
+	if (!isValid(taskUpdate)) return response.status(422).json('Missing enteries');
 
 	tasks.splice(taskIndex, 1, taskUpdate);
 	response.status(200).json(taskUpdate);
 };
 
 exports.deleteTaskId = (request, response)  =>{
-	if (!request.session.authorized || !request.session.sessionMail) return response.sendStatus(401);
+	if (!request.session.authorized || !request.session.sessionMail) return response.status(401).json('Unauthorized');
 
 	const id = request.params.id;
 	const taskIndex = tasks.findIndex(t => t.id == id);
 
 	if (!taskIndex == 0) return response.sendStatus(404);
 
-    const searchTask = tasks.find(t => t.id == id);
-    const jsonResult = JSON.stringify(searchTask);
+	const searchTask = tasks.find(t => t.id == id);
+	const jsonResult = JSON.stringify(searchTask);
 
 	tasks.splice(taskIndex, 1);
 	response.status(204).json(jsonResult);
@@ -132,7 +132,7 @@ exports.deleteTaskId = (request, response)  =>{
 /*Session functions*/
 exports.getSession  = (request, response)  =>{
 
-	if (!request.session.authorized) return response.sendStatus(401);
+	if (!request.session.authorized) return response.status(401).json('Unauthorized');
   
 	return response.status(200);
   
@@ -142,7 +142,7 @@ exports.postSession  = (request, response)  =>{
 	const enteredMail = request.body.enteredMail;
 	const enteredPassword = request.body.enteredPassword;
 
-	if (enteredPassword != password) return response.sendStatus(401);
+	if (enteredPassword != password) return response.status(401).json('Unauthorized');
 
 	request.session.sessionMail = enteredMail;
 	request.session.authorized = true;
@@ -151,7 +151,7 @@ exports.postSession  = (request, response)  =>{
 };
 
 exports.deleteSession  = (request, response)  =>{
-	if (!request.session.authorized || !request.session.sessionMail) return response.sendStatus(401);
+	if (!request.session.authorized || !request.session.sessionMail) return response.status(401).json('Unauthorized');
     
 	delete request.session.sessionMail;
 	request.session.authorized = false;

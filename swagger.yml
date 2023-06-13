@@ -1,0 +1,123 @@
+openapi: '3.0.2'
+info:
+  title: ToDo List API
+  version: '1.0'
+servers:
+  - url: http://localhost:3000
+
+tags:
+  - name: Tasks
+    description: Everything about Tasks
+paths:
+  /tasks:
+    get:
+      tags:
+        - Tasks
+      summary: Get all Tasks
+      responses:
+        '200':
+          description: OK
+    post:
+      tags:
+        - Tasks
+      summary: Add a new Task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '201':
+          description: Created
+
+  /tasks/{Id}:
+    get:
+      tags:
+        - Tasks
+      summary: Get a Task by Id
+      parameters:
+        - name: Id
+          in: path
+          required: true
+          description: The Id of the Task
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+    put:
+      tags:
+        - Tasks
+      summary: Update a Task by Id
+      parameters:
+        - name: Id
+          in: path
+          required: true
+          description: The Id of the Task
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '200':
+          description: OK
+    delete:
+      tags:
+        - Tasks
+      summary: Delete a Task by Id
+      parameters:
+        - name: Id
+          in: path
+          required: true
+          description: The Id of the Task
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+  /login:
+      post:
+        summary: Login with mail and password
+        responses:
+          '201':
+            description: No Content
+  /verify:
+    get:
+      summary: Verify the Login
+      responses:
+        '200':
+          description: No Content
+  /logout:
+    delete:
+      summary: Deletes the set cookie
+      responses:
+        '204':
+          description: No Content
+    
+components:
+  schemas:
+    Task:
+      type: object
+      required:
+        - title
+      properties:
+        id:
+          type: number
+          example: 2
+        title:
+          type: string
+          example: "Study"
+        description:
+          type: string
+          example: "Preparing for the upcoming exam."
+        done:
+          type: boolean
+          example: false
+        dueDate:
+          type: string
+          example: '2023-06-20'
