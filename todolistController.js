@@ -23,35 +23,35 @@ const tasks = [
 		'title' : 'Clean',
 		'description' : 'Cleaning the house.',
 		'done': true,
-		'due': '2023-10-10'
+		'dueDate': '2023-10-10'
 	},
 	{
 		'id': 2,
 		'title' : 'Study',
 		'description' : 'Preparing for the upcoming exam.',
 		'done': false,
-		'due': '2023-06-20'
+		'dueDate': '2023-06-20'
 	},
 	{
 		'id': 3,
 		'title' : 'Exercise',
 		'description' : 'Going for a run in the morning.',
 		'done': false,
-		'due': '2023-06-15'
+		'dueDate': '2023-06-15'
 	},
 	{
 		'id': 4,
 		'title' : 'Grocery Shopping',
 		'description' : 'Buying essential items from the grocery store.',
 		'done': true,
-		'due': '2023-06-16'
+		'dueDate': '2023-06-16'
 	},
 	{
 		'id': 5,
 		'title' : 'Write Blog Post',
 		'description' : 'Creating a blog post about the latest technology trends.',
 		'done': false,
-		'due': '2023-06-18'
+		'dueDate': '2023-06-18'
 	},
 	{
 		'id': 6,
@@ -65,7 +65,7 @@ const tasks = [
 
 /*All Tasks*/
 exports.getTasks = (request, response)  =>{
-	if (!request.session.authorized|| !request.session.sessionMail) return response.status(401).json('Unauthorized');
+	if (!request.session.authorized || !request.session.sessionMail) return response.status(401).json('Unauthorized');
 	response.status(200).json(tasks);
 };
 
@@ -106,8 +106,8 @@ exports.putTaskId  = (request, response)  =>{
 	const taskIndex = tasks.findIndex(t => t.id == id);
 	const taskUpdate = request.body;
 
-	if (!taskIndex == 0) return response.status(404);
-	if (!isValid(taskUpdate)) return response.status(422).json('Missing enteries');
+	if (!taskIndex < 0) return response.sendStatus(404);
+	if (!isValid(taskUpdate)) return response.send(422).json('Missing enteries');
 
 	tasks.splice(taskIndex, 1, taskUpdate);
 	response.status(200).json(taskUpdate);
@@ -119,7 +119,7 @@ exports.deleteTaskId = (request, response)  =>{
 	const id = request.params.id;
 	const taskIndex = tasks.findIndex(t => t.id == id);
 
-	if (!taskIndex == 0) return response.sendStatus(404);
+	if (!taskIndex < 0) return response.sendStatus(404);
 
 	const searchTask = tasks.find(t => t.id == id);
 	const jsonResult = JSON.stringify(searchTask);
@@ -154,7 +154,7 @@ exports.deleteSession  = (request, response)  =>{
 	delete request.session.sessionMail;
 	request.session.authorized = false;
 
-	return response.status(204);
+	return response.sendStatus(204);
 
 };
 
