@@ -132,10 +132,8 @@ exports.deleteTaskId = (request, response)  =>{
 /*Session functions*/
 exports.getSession  = (request, response)  =>{
 
-	if (!request.session.authorized) return response.status(401).json('Unauthorized');
-  
-	return response.status(200);
-  
+	if (!request.session.authorized || !request.session.sessionMail) return response.status(401).json('Unauthorized');
+    return response.status(200).json("Verified");
 };
 
 exports.postSession  = (request, response)  =>{
